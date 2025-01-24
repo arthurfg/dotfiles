@@ -6,3 +6,15 @@
 --
 -- Or remove existing autocmds by their group name (which is prefixed with `lazyvim_` for the defaults)
 -- e.g. vim.api.nvim_del_augroup_by_name("lazyvim_wrap_spell")
+-- vim.api.nvim_create_autocmd("User", {
+--     pattern = "LazyVimStarted",
+--     callback = function()
+--         local lazy = require("lazy")
+--         if not lazy.is_installed("bllink.cmp") then
+--             lazy.install("bllink.cmp")
+--             vim.notify("bllink.cmp foi instalado!")
+--         else
+--             vim.notify("bllink.cmp já está instalado.")
+--         end
+--     end,
+-- })

@@ -29,47 +29,10 @@ return {
 
   -- disable trouble
   { "folke/trouble.nvim", enabled = false },
-  {
-  "neovim/nvim-lspconfig",
-  config = function()
-    local lspconfig = require("lspconfig")
-    -- Configuração para o Pyright
-    lspconfig.pyright.setup{
-      on_attach = function(client, bufnr)
-        -- Aqui você pode adicionar configurações de keymaps ou outras configurações de LSP
-        print("Pyright LSP attached")
-      end,
-      flags = {
-        debounce_text_changes = 150,
-      },
-    }
-  end,
-},
+
   -- override nvim-cmp and add cmp-emoji
-  {
-    "hrsh7th/nvim-cmp",
-    dependencies = {
-      "hrsh7th/cmp-nvim-lsp",  -- Para usar LSP no autocompletion
-      "hrsh7th/cmp-emoji",      -- Complemento para emoji
-      "saadparwaiz1/cmp_luasnip", -- Para usar luasnip no autocompletion
-      "hrsh7th/cmp-buffer",     -- Para usar buffer como fonte de autocompletion
-      "hrsh7th/cmp-path",       -- Para sugerir caminhos de arquivos
-    },
-    opts = function(_, opts)
-      local cmp = require("cmp")
-      opts.sources = cmp.config.sources({
-        { name = "nvim_lsp" },
-        { name = "buffer" },        -- Sugestões baseadas no conteúdo do buffer
-        { name = "path" },          -- Sugestões baseadas em caminhos de arquivos
-        { name = "emoji" },         -- Sugestões de emoji
-      })
-      -- Ajuste o comportamento do autocomplete (exemplo: configurar para exibir sugestões automaticamente)
-      opts.window = {
-        completion = cmp.config.window.bordered(),
-        documentation = cmp.config.window.bordered(),
-      }
-    end,
-  },  -- change some telescope options and a keymap to browse plugin files
+
+  -- change some telescope options and a keymap to browse plugin files
   {
     "nvim-telescope/telescope.nvim",
     keys = {
@@ -91,6 +54,21 @@ return {
       },
     },
   },
+
+  -- add pyright to lspconfig
+  {
+    "neovim/nvim-lspconfig",
+    ---@class PluginLspOpts
+    opts = {
+      ---@type lspconfig.options
+      servers = {
+        -- pyright will be automatically installed with mason and loaded with lspconfig
+        pyright = {},
+      },
+    },
+  },
+
+
 
   -- for typescript, LazyVim also includes extra specs to properly setup lspconfig,
   -- treesitter, mason and typescript.nvim. So instead of the above, you can use:
@@ -129,8 +107,6 @@ return {
       vim.list_extend(opts.ensure_installed, {
         "tsx",
         "typescript",
-        "python",
-        "py"
       })
     end,
   },
@@ -170,7 +146,6 @@ return {
     "williamboman/mason.nvim",
     opts = {
       ensure_installed = {
-        "pyright",
         "stylua",
         "shellcheck",
         "shfmt",
@@ -178,4 +153,6 @@ return {
       },
     },
   },
+  -- Use <tab> for completion and snippets (supertab)
+  -- first: disable default <tab> and <s-tab> behavior in LuaSnip
 }
